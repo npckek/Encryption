@@ -2,6 +2,10 @@
 
 VERSION="1.0.0"
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
 if [[ "$1" == "-v" || "$1" == "--version" ]]; then
     echo "Encryption Tool v${VERSION}"
     exit 0
@@ -25,7 +29,7 @@ if [[ "$input_file" == *.data ]]; then
 	output_file="${input_file%.data}"
 	openssl enc -d -aes-256-cbc -in "$input_file" -out "$output_file"
 	if [ $? -eq 0 ]; then
-		echo "Архив $input_file успешно дешифрован."
+		echo -e "${GREEN}Архив $input_file успешно дешифрован.${NC}"
 		rm "$input_file"
 		if [[ "$output_file" == *.*.zip ]]; then
 			unzip "$output_file"
@@ -33,14 +37,14 @@ if [[ "$input_file" == *.data ]]; then
 			unzip -j "$output_file" -d "${output_file%.zip}"
 		fi
 		if [ $? -eq 0 ]; then
-			echo "Файл $output_file успешно разархивирован."
+			echo -e "${GREEN}Файл $output_file успешно разархивирован.${NC}"
 			rm "$output_file"
 		else
-			echo "Ошибка при разархивировании файла $output_file.zip."
+			echo -e "${RED}Ошибка при разархивировании файла $output_file.zip.${NC}"
 			exit 1
 		fi
 	else
-		echo "Ошибка при дешифровании архива $input_file."
+		echo -e "${RED}Ошибка при дешифровании архива $input_file.${NC}"
 		exit 1
 	fi
 else
@@ -48,18 +52,18 @@ else
 	output_file="${input_file}.zip"
 	zip -r "$output_file" "$input_file"
 	if [ $? -eq 0 ]; then
-		echo "Архив $input_file.zip успешно создан."
+		echo -e "${GREEN}Архив $input_file.zip успешно создан.${NC}"
 		rm -rf "$input_file" 
 		openssl enc -aes-256-cbc -in "$output_file" -out "${output_file}.data"
 		if [ $? -eq 0 ]; then
-			echo "Архив $input_file.zip успешно зашифрован и сохранен как ${output_file}.data"
+			echo -e "${GREEN}Архив $input_file.zip успешно зашифрован и сохранен как ${output_file}.data${NC}"
 			rm "$output_file" 
 		else
-			echo "Ошибка при шифровании архива $input_file.zip."
+			echo -e "${RED}Ошибка при шифровании архива $input_file.zip.${NC}"
 			exit 1
 		fi
 	else
-		echo "Ошибка при создании архива $input_file.zip."
+		echo -e "${RED}Ошибка при создании архива $input_file.zip.${NC}"
 		exit 1
 	fi
 fi
