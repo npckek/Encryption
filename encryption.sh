@@ -6,6 +6,14 @@ if [[ "$1" == "-v" || "$1" == "--version" ]]; then
     echo "Encryption Tool v${VERSION}"
     exit 0
 fi
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: encryption [OPTIONS] <file>"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help       Show help"
+    echo "  -v, --version    Show version"
+    exit 0
+fi
 if [ $# -eq 0 ]; then
 	echo "Использование: $0 <filename>"
 	exit 1
