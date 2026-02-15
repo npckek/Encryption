@@ -1,4 +1,11 @@
 #!/bin/bash
+
+VERSION="1.0.0"
+
+if [[ "$1" == "-v" || "$1" == "--version" ]]; then
+    echo "Encryption Tool v${VERSION}"
+    exit 0
+fi
 if [ $# -eq 0 ]; then
 	echo "Использование: $0 <filename>"
 	exit 1
