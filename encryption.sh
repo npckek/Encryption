@@ -32,7 +32,7 @@ output_file=""
 if [[ "$input_file" == *.data ]]; then
 	echo "Файл $input_file имеет расширение .data, дешифрование и разархивирование..."
 	output_file="${input_file%.data}"
-	openssl enc -d -aes-256-cbc -in "$input_file" -out "$output_file"
+	openssl enc -d -aes-256-cbc -pbkdf2 -in "$input_file" -out "$output_file"
 	if [ $? -eq 0 ]; then
 		echo -e "${GREEN}Архив $input_file успешно дешифрован.${NC}"
 		if [ "$KEEP_ORIGINAL" = false ]; then
@@ -63,7 +63,7 @@ else
 		if [ "$KEEP_ORIGINAL" = false ]; then
 			rm -rf "$input_file"
 		fi
-		openssl enc -aes-256-cbc -in "$output_file" -out "${output_file}.data"
+		openssl enc -aes-256-cbc -pbkdf2 -in "$output_file" -out "${output_file}.data"
 		if [ $? -eq 0 ]; then
 			echo -e "${GREEN}Архив $input_file.zip успешно зашифрован и сохранен как ${output_file}.data${NC}"
 			rm "$output_file" 
