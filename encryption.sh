@@ -23,16 +23,18 @@ if [[ "$1" == "-k" || "$1" == "--keep-original" ]]; then
     KEEP_ORIGINAL=true
     shift
 fi
-if [ ! -e "$input_file" ]; then
-    echo -e "${RED}Файл или директория не найдены${NC}"
-    exit 1
-fi
 if [ $# -eq 0 ]; then
 	echo "Использование: $0 <filename>"
 	exit 1
 fi
 input_file="$1"
 output_file=""
+
+if [ ! -e "$input_file" ]; then
+    echo -e "${RED}Файл или директория не найдены: $input_file${NC}"
+    exit 1
+fi
+
 if [[ "$input_file" == *.data ]]; then
 	echo "Файл $input_file имеет расширение .data, дешифрование и разархивирование..."
 	output_file="${input_file%.data}"
