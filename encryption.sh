@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VERSION="1.0.0"
+KEEP_ORIGINAL=false
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -18,6 +19,10 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
     echo "  -v, --version    Show version"
     exit 0
 fi
+if [[ "$1" == "-k" || "$1" == "--keep-original" ]]; then
+    KEEP_ORIGINAL=true
+    shift
+fi
 if [ $# -eq 0 ]; then
 	echo "Использование: $0 <filename>"
 	exit 1
@@ -30,7 +35,9 @@ if [[ "$input_file" == *.data ]]; then
 	openssl enc -d -aes-256-cbc -in "$input_file" -out "$output_file"
 	if [ $? -eq 0 ]; then
 		echo -e "${GREEN}Архив $input_file успешно дешифрован.${NC}"
-		rm "$input_file"
+		if [ "$KEEP_ORIGINAL" = false ]; then
+			rm "$input_file"
+		fi
 		if [[ "$output_file" == *.*.zip ]]; then
 			unzip "$output_file"
 		else
@@ -44,7 +51,7 @@ if [[ "$input_file" == *.data ]]; then
 			exit 1
 		fi
 	else
-		echo -e "${RED}Ошибка при дешифровании архива $input_file.${NC}"
+		echo -e "${RED}Ошибка при дешифровании архива $input_file. ${NC}"
 		exit 1
 	fi
 else
@@ -53,7 +60,9 @@ else
 	zip -r "$output_file" "$input_file"
 	if [ $? -eq 0 ]; then
 		echo -e "${GREEN}Архив $input_file.zip успешно создан.${NC}"
-		rm -rf "$input_file" 
+		if [ "$KEEP_ORIGINAL" = false ]; then
+			rm -rf "$input_file"
+		fi
 		openssl enc -aes-256-cbc -in "$output_file" -out "${output_file}.data"
 		if [ $? -eq 0 ]; then
 			echo -e "${GREEN}Архив $input_file.zip успешно зашифрован и сохранен как ${output_file}.data${NC}"
