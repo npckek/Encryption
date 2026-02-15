@@ -23,6 +23,10 @@ if [[ "$1" == "-k" || "$1" == "--keep-original" ]]; then
     KEEP_ORIGINAL=true
     shift
 fi
+if [ ! -e "$input_file" ]; then
+    echo -e "${RED}Файл или директория не найдены${NC}"
+    exit 1
+fi
 if [ $# -eq 0 ]; then
 	echo "Использование: $0 <filename>"
 	exit 1
